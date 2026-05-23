@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model caregiver_patient_links {
+  id                                                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  caregiver_id                                      String    @db.Uuid
+  patient_id                                        String    @db.Uuid
+  created_at                                        DateTime? @default(now()) @db.Timestamp(6)
+  users_caregiver_patient_links_caregiver_idTousers users     @relation("caregiver_patient_links_caregiver_idTousers", fields: [caregiver_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_caregiver_patient_links_patient_idTousers   users     @relation("caregiver_patient_links_patient_idTousers", fields: [patient_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model doctor_notes {
+  id                                   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  doctor_id                            String    @db.Uuid
+  patient_id                           String    @db.Uuid
+  note                                 String
+  follow_up_date                       DateTime? @db.Date
+  created_at                           DateTime? @default(now()) @db.Timestamp(6)
+  users_doctor_notes_doctor_idTousers  users     @relation("doctor_notes_doctor_idTousers", fields: [doctor_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_doctor_notes_patient_idTousers users     @relation("doctor_notes_patient_idTousers", fields: [patient_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model medicine_logs {
+  id          String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  medicine_id String          @db.Uuid
+  patient_id  String          @db.Uuid
+  status      medicine_status
+  taken_at    DateTime?       @default(now()) @db.Timestamp(6)
+  note        String?
+  medicines   medicines       @relation(fields: [medicine_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users       users           @relation(fields: [patient_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model medicines {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patient_id    String          @db.Uuid
+  medicine_name String          @db.VarChar(150)
+  dosage        String          @db.VarChar(100)
+  frequency     String          @db.VarChar(100)
+  reminder_time DateTime        @db.Time(6)
+  start_date    DateTime?       @db.Date
+  end_date      DateTime?       @db.Date
+  instructions  String?
+  created_at    DateTime?       @default(now()) @db.Timestamp(6)
+  medicine_logs medicine_logs[]
+  users         users           @relation(fields: [patient_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model patient_profiles {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id           String    @unique @db.Uuid
+  condition_type    String    @db.VarChar(100)
+  emergency_contact String?   @db.VarChar(20)
+  doctor_name       String?   @db.VarChar(100)
+  created_at        DateTime? @default(now()) @db.Timestamp(6)
+  users             users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model symptom_notes {
+  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patient_id  String           @db.Uuid
+  symptom     String
+  severity    symptom_severity
+  note        String?
+  recorded_at DateTime?        @default(now()) @db.Timestamp(6)
+  users       users            @relation(fields: [patient_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model users {
+  id                                                                  String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  full_name                                                           String                    @db.VarChar(100)
+  email                                                               String                    @unique @db.VarChar(255)
+  password_hash                                                       String
+  role                                                                user_role
+  gender                                                              gender_type?
+  age                                                                 Int?
+  created_at                                                          DateTime?                 @default(now()) @db.Timestamp(6)
+  updated_at                                                          DateTime?                 @default(now()) @db.Timestamp(6)
+  caregiver_patient_links_caregiver_patient_links_caregiver_idTousers caregiver_patient_links[] @relation("caregiver_patient_links_caregiver_idTousers")
+  caregiver_patient_links_caregiver_patient_links_patient_idTousers   caregiver_patient_links[] @relation("caregiver_patient_links_patient_idTousers")
+  doctor_notes_doctor_notes_doctor_idTousers                          doctor_notes[]            @relation("doctor_notes_doctor_idTousers")
+  doctor_notes_doctor_notes_patient_idTousers                         doctor_notes[]            @relation("doctor_notes_patient_idTousers")
+  medicine_logs                                                       medicine_logs[]
+  medicines                                                           medicines[]
+  patient_profiles                                                    patient_profiles?
+  symptom_notes                                                       symptom_notes[]
+  vitals                                                              vitals[]
+  weekly_summaries                                                    weekly_summaries[]
+}
+
+model vitals {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patient_id  String     @db.Uuid
+  vital_type  vital_type
+  value       String     @db.VarChar(50)
+  recorded_at DateTime?  @default(now()) @db.Timestamp(6)
+  note        String?
+  users       users      @relation(fields: [patient_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model weekly_summaries {
+  id                   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patient_id           String    @db.Uuid
+  summary_text         String
+  adherence_percentage Decimal?  @db.Decimal(5, 2)
+  missed_doses_count   Int?      @default(0)
+  generated_at         DateTime? @default(now()) @db.Timestamp(6)
+  users                users     @relation(fields: [patient_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+enum gender_type {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum medicine_status {
+  TAKEN
+  SKIPPED
+  SNOOZED
+}
+
+enum symptom_severity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum user_role {
+  PATIENT
+  CAREGIVER
+  DOCTOR
+}
+
+enum vital_type {
+  BLOOD_SUGAR
+  BLOOD_PRESSURE
+  WEIGHT
+}
