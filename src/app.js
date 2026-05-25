@@ -6,6 +6,9 @@ import authMiddleware from "./middleware/auth.middleware.js";
 import roleMiddleware from "./middleware/role.middleware.js";
 import patientProfileRoutes from "./modules/patient-profile/patientProfile.routes.js";
 import medicineRoutes from "./modules/medicine/medicine.routes.js";
+import medicineLogRoutes from "./modules/medicine-log/medicineLog.routes.js";
+import vitalsRoutes from "./modules/vitals/vitals.routes.js";
+import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
 
 const app = express();
 
@@ -87,4 +90,14 @@ app.use(
     "/api/medicines",
     medicineRoutes
 );
+
+// medicine log routes
+app.use(
+    "/api/medicine-logs",
+    medicineLogRoutes
+);
+// vitals routes
+app.use("/api/vitals", vitalsRoutes);
+// dashboard routes
+app.use("/api/dashboard", dashboardRoutes);
 export default app;
