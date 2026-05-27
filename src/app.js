@@ -9,6 +9,10 @@ import medicineRoutes from "./modules/medicine/medicine.routes.js";
 import medicineLogRoutes from "./modules/medicine-log/medicineLog.routes.js";
 import vitalsRoutes from "./modules/vitals/vitals.routes.js";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
+import "./cron/medicineReminder.cron.js";
+import notificationsRoutes from "./modules/notifications/notifications.routes.js";
+import doctorRoutes from "./modules/doctor/doctor.routes.js";
+import caregiverRoutes from "./modules/caregiver/caregiver.routes.js";
 
 const app = express();
 
@@ -100,4 +104,24 @@ app.use(
 app.use("/api/vitals", vitalsRoutes);
 // dashboard routes
 app.use("/api/dashboard", dashboardRoutes);
+
+// notifications routes
+
+app.use(
+    "/api/notifications",
+    notificationsRoutes
+);
+
+// doctor routes
+app.use(
+    "/api/doctor",
+    doctorRoutes
+);
+
+// CAREGIVER ALERTS
+app.use(
+    "/api/caregiver",
+    caregiverRoutes
+);
+
 export default app;
