@@ -7,7 +7,17 @@ class PatientDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Patient Dashboard")),
+      appBar: AppBar(
+        title: const Text("Patient Dashboard"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              context.push("/notifications");
+            },
+          ),
+        ],
+      ),
 
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -66,7 +76,19 @@ class PatientDashboardScreen extends StatelessWidget {
               child: const Text("View Medicines"),
             ),
 
-            ElevatedButton(onPressed: () {}, child: const Text("View Vitals")),
+            ElevatedButton(
+              onPressed: () {
+                context.push("/vitals");
+              },
+              child: const Text("View Vitals"),
+            ),
+            ListTile(
+              leading: const Icon(Icons.show_chart),
+              title: const Text("Vital Trends"),
+              onTap: () {
+                context.push("/vital-trends");
+              },
+            ),
           ],
         ),
       ),

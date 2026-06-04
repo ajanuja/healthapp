@@ -13,4 +13,10 @@ class MedicineLogService {
 
     return response.data["data"];
   }
+
+  Future<List<dynamic>> getMedicineHistory(String medicineId) async {
+    final response = await dio.get("/medicine-logs/$medicineId");
+
+    return response.data["data"];
+  }
 }

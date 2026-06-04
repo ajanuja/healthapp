@@ -13,7 +13,9 @@ import "./cron/medicineReminder.cron.js";
 import notificationsRoutes from "./modules/notifications/notifications.routes.js";
 import doctorRoutes from "./modules/doctor/doctor.routes.js";
 import caregiverRoutes from "./modules/caregiver/caregiver.routes.js";
-
+import doctorMedicineRoutes from "./modules/doctor/doctorMedicine.routes.js";
+import doctorVitalRoutes from "./modules/doctor/doctorVital.routes.js";
+import appointmentsRoutes from "./modules/appointments/appointments.routes.js";
 const app = express();
 
 app.use(cors());
@@ -124,4 +126,15 @@ app.use(
     caregiverRoutes
 );
 
+app.use(
+    "/api/doctor",
+    doctorMedicineRoutes
+);
+app.use("/doctor", doctorVitalRoutes);
+
+
+app.use(
+    "/api/appointments",
+    appointmentsRoutes
+);
 export default app;

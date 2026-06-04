@@ -104,4 +104,73 @@ export const getPatientReportService = async (
 
     };
 
+    
+
+};
+
+// SEARCH PATIENT
+export const searchPatientService = async (
+    email
+) => {
+
+    const patient =
+        await prisma.users.findFirst({
+
+            where: {
+                email,
+                role: "PATIENT"
+            },
+
+            select: {
+                id: true,
+                full_name: true,
+                email: true,
+                age: true,
+                gender: true
+            }
+
+        });
+
+    if (!patient) {
+        throw new Error(
+            "Patient not found"
+        );
+    }
+
+    return patient;
+
+};
+
+
+// ASSIGN PATIENT
+export const assignPatientService = async (
+    doctorId,
+    patientId
+) => {
+
+    const existing =
+        await prisma.doctor_patients.findFirst({
+
+            where: {
+                doctor_id: doctorId,
+                patient_id: patientId
+            }
+
+        });
+
+    if (existing) {
+        throw new Error(
+            "Patient already assigned"
+        );
+    }
+
+    return await prisma.doctor_patients.create({
+
+        data: {
+            doctor_id: doctorId,
+            patient_id: patientId
+        }
+
+    });
+
 };

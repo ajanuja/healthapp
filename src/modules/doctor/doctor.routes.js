@@ -7,7 +7,9 @@ import roleMiddleware from "../../middleware/role.middleware.js";
 import {
 
     getMyPatients,
-    getPatientReport
+    getPatientReport,
+    searchPatient,
+assignPatient
 
 } from "./doctor.controller.js";
 
@@ -29,6 +31,20 @@ router.get(
     authMiddleware,
     roleMiddleware("DOCTOR"),
     getPatientReport
+);
+
+router.get(
+    "/search-patient",
+    authMiddleware,
+    roleMiddleware("DOCTOR"),
+    searchPatient
+);
+
+router.post(
+    "/assign-patient",
+    authMiddleware,
+    roleMiddleware("DOCTOR"),
+    assignPatient
 );
 
 export default router;

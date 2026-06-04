@@ -19,8 +19,12 @@ class _MedicineScreenState extends ConsumerState<MedicineScreen> {
   Set<String> takenToday = {};
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
+    loadData();
+  }
+
+  Future<void> loadData() async {
     await fetchMedicines();
     await fetchLogs();
   }
@@ -35,19 +39,19 @@ class _MedicineScreenState extends ConsumerState<MedicineScreen> {
           .where((log) {
             final takenDate = DateTime.parse(log["taken_at"]);
 
-            return takenDate.year == today.year &&
+            return log["status"] == "TAKEN" &&
+                takenDate.year == today.year &&
                 takenDate.month == today.month &&
                 takenDate.day == today.day;
           })
-          .map((log) {
-            return log["medicine_id"].toString();
-          })
+          .map((log) => log["medicine_id"].toString())
           .toSet();
 
       setState(() {
         takenToday = todayTaken;
       });
     } catch (e) {
+      print("FETCH LOGS ERROR:");
       print(e);
     }
   }
@@ -150,6 +154,16 @@ class _MedicineScreenState extends ConsumerState<MedicineScreen> {
 
                             child: const Text("Taken"),
                           ),
+
+                    onTap: () {
+                      context.push(
+                        "/medicine-history",
+                        extra: {
+                          "medicineId": med["id"],
+                          "medicineName": med["medicine_name"],
+                        },
+                      );
+                    },
                   ),
                 );
               },
