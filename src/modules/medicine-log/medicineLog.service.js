@@ -2,45 +2,87 @@ import prisma from "../../config/prisma.js";
 
 
 // CREATE LOG
+
 export const createMedicineLogService = async (
     userId,
     payload
 ) => {
 
-    // Check medicine ownership
+    // Check ownership
     const medicine = await prisma.medicines.findFirst({
-
         where: {
             id: payload.medicine_id,
             patient_id: userId
         }
-
     });
 
     if (!medicine) {
         throw new Error("Medicine not found");
     }
 
-    const log = await prisma.medicine_logs.create({
+    const todayStart = new Date();
 
-        data: {
+    todayStart.setHours(
+        0,
+        0,
+        0,
+        0
+    );
 
-            medicine_id: payload.medicine_id,
+    const todayEnd = new Date();
 
-            patient_id: userId,
+    todayEnd.setHours(
+        23,
+        59,
+        59,
+        999
+    );
 
-            status: payload.status,
+    // Check if already marked today
+    const existingLog =
+        await prisma.medicine_logs.findFirst({
 
-            taken_at: new Date(),
+            where: {
+                medicine_id: payload.medicine_id,
 
-            note: payload.note || null
+                patient_id: userId,
 
-        }
+                taken_at: {
+                    gte: todayStart,
+                    lte: todayEnd
+                }
+            }
 
-    });
+        });
+
+    if (existingLog) {
+        throw new Error(
+            "Medicine already marked today"
+        );
+    }
+
+    const log =
+        await prisma.medicine_logs.create({
+
+            data: {
+
+                medicine_id:
+                    payload.medicine_id,
+
+                patient_id: userId,
+
+                status: payload.status,
+
+                taken_at: new Date(),
+
+                note:
+                    payload.note || null
+
+            }
+
+        });
 
     return log;
-
 };
 
 

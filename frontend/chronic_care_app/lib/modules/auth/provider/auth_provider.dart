@@ -35,6 +35,7 @@ class AuthNotifier extends StateNotifier<bool> {
       final role = response["data"]["user"]["role"];
 
       await TokenStorage.saveToken(token);
+      await TokenStorage.saveRole(role);
 
       state = false;
 
@@ -73,6 +74,7 @@ class AuthNotifier extends StateNotifier<bool> {
       final token = response["data"]["token"];
 
       await TokenStorage.saveToken(token);
+      await TokenStorage.saveRole(role);
 
       state = false;
 

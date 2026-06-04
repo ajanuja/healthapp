@@ -25,7 +25,8 @@ export const createMedicine = async (req, res) => {
         });
 
     } catch (error) {
-
+ console.log("CREATE MEDICINE ERROR:");
+    console.log(error);
         res.status(400).json({
             success: false,
             message: error.message
@@ -51,6 +52,9 @@ export const getMyMedicines = async (req, res) => {
         });
 
     } catch (error) {
+
+        console.log("CREATE MEDICINE ERROR:");
+    console.log(error);
 
         res.status(400).json({
             success: false,
@@ -106,6 +110,8 @@ export const updateMedicine = async (req, res) => {
         });
 
     } catch (error) {
+        console.log("CREATE MEDICINE ERROR:");
+    console.log(error);
 
         res.status(400).json({
             success: false,
@@ -133,6 +139,8 @@ export const deleteMedicine = async (req, res) => {
         });
 
     } catch (error) {
+        console.log("CREATE MEDICINE ERROR:");
+    console.log(error);
 
         res.status(400).json({
             success: false,
