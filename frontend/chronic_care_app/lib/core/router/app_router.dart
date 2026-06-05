@@ -1,8 +1,11 @@
+import 'package:chronic_care_app/modules/appointment/screens/patient_appointments_screen.dart';
 import 'package:chronic_care_app/modules/appointment/screens/schedule_appointment_screen.dart';
 import 'package:chronic_care_app/modules/doctor/screens/add_patient_screen.dart';
 import 'package:chronic_care_app/modules/doctor/screens/doctor_patients_screen.dart';
 import 'package:chronic_care_app/modules/doctor/screens/patient_report_screen.dart';
 import 'package:chronic_care_app/modules/doctor/screens/prescribe_medicine_screen.dart';
+import 'package:chronic_care_app/modules/doctorNotes/screens/doctor_notes_screen.dart';
+import 'package:chronic_care_app/modules/doctorNotes/screens/patient_notes_screen.dart';
 import 'package:chronic_care_app/modules/medicines/screens/add_medicine_screen.dart';
 import 'package:chronic_care_app/modules/dashboard/screens/caregiver_dashboard_screen.dart';
 import 'package:chronic_care_app/modules/dashboard/screens/doctor_dashboard_screen.dart';
@@ -135,6 +138,29 @@ final appRouter = GoRouter(
           patientName: data["patientName"],
         );
       },
+    ),
+
+    GoRoute(
+      path: "/doctor-notes",
+
+      builder: (context, state) {
+        final data = state.extra as Map<String, dynamic>;
+
+        return DoctorNotesScreen(
+          patientId: data["patientId"],
+          patientName: data["patientName"],
+        );
+      },
+    ),
+
+    GoRoute(
+      path: "/patient-appointments",
+      builder: (context, state) => const PatientAppointmentsScreen(),
+    ),
+
+    GoRoute(
+      path: "/patient-notes",
+      builder: (context, state) => const PatientNotesScreen(),
     ),
   ],
 );

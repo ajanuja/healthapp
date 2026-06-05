@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../provider/doctor_provider.dart';
 
@@ -71,7 +72,26 @@ class _PatientReportScreenState extends ConsumerState<PatientReportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.patientName)),
+      appBar: AppBar(
+        title: Text(widget.patientName),
+
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.note_alt),
+
+            onPressed: () {
+              context.push(
+                "/doctor-notes",
+
+                extra: {
+                  "patientId": widget.patientId,
+                  "patientName": widget.patientName,
+                },
+              );
+            },
+          ),
+        ],
+      ),
 
       body: loading
           ? const Center(child: CircularProgressIndicator())

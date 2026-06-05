@@ -16,6 +16,9 @@ import caregiverRoutes from "./modules/caregiver/caregiver.routes.js";
 import doctorMedicineRoutes from "./modules/doctor/doctorMedicine.routes.js";
 import doctorVitalRoutes from "./modules/doctor/doctorVital.routes.js";
 import appointmentsRoutes from "./modules/appointments/appointments.routes.js";
+import doctorNotesRoutes from "./modules/doctorNotes/doctorNotes.routes.js";
+
+
 const app = express();
 
 app.use(cors());
@@ -136,5 +139,10 @@ app.use("/doctor", doctorVitalRoutes);
 app.use(
     "/api/appointments",
     appointmentsRoutes
+);
+
+app.use(
+    "/api/doctor",
+    doctorNotesRoutes
 );
 export default app;

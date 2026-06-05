@@ -82,6 +82,22 @@ class PatientDashboardScreen extends StatelessWidget {
               },
               child: const Text("View Vitals"),
             ),
+            ElevatedButton(
+              onPressed: () {
+                context.push("/patient-notes");
+              },
+
+              child: const Text("Doctor Notes"),
+            ),
+
+            const SizedBox(height: 10),
+
+            ElevatedButton(
+              onPressed: () {
+                context.push("/patient-appointments");
+              },
+              child: const Text("Appointments"),
+            ),
             ListTile(
               leading: const Icon(Icons.show_chart),
               title: const Text("Vital Trends"),
